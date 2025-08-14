@@ -24,6 +24,15 @@ dist-ssr
 *.sw?
 
 App.jsx
-components
-pages
 supabase.js
+
+Notifications.jsx
+Notification.jsx
+PostCard.jsx
+AdminDashboard.jsx
+ChangePassword.jsx
+Feed.jsx
+Register.jsx
+Profile.jsx
+ResetPassword.jsx
+ResetPasswordConfirm.jsx

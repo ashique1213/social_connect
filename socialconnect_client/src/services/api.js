@@ -45,3 +45,8 @@ api.interceptors.response.use(
   }
 );
 
+export const register = (data) => api.post('/api/auth/register/', data);
+export const login = (data) => api.post('/api/auth/login/', data);
+export const logout = (data) => api.post('/api/auth/logout/', data);
+export const verifyEmail = (data) => api.post('/api/auth/verify/', data);
+

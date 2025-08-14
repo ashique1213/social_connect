@@ -1,8 +1,8 @@
-// src/pages/Notifications.jsx
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Notification from '../components/Notification';
 import { markNotificationRead, markAllNotificationsRead } from '../services/api';
+import { toast } from 'react-toastify';
 
 function Notifications() {
   const { notifications, setNotifications, fetchNotifications, loading } = useContext(AuthContext);
@@ -18,8 +18,26 @@ function Notifications() {
       setNotifications(notifications.map((n) =>
         n.id === notificationId ? { ...n, is_read: true } : n
       ));
+      toast.success('Notification marked as read.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     } catch (err) {
       console.error('Failed to mark notification as read:', err);
+      toast.error('Failed to mark notification as read.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     }
   };
 
@@ -27,8 +45,26 @@ function Notifications() {
     try {
       await markAllNotificationsRead();
       setNotifications(notifications.map((n) => ({ ...n, is_read: true })));
+      toast.success('All notifications marked as read.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     } catch (err) {
       console.error('Failed to mark all notifications as read:', err);
+      toast.error('Failed to mark all notifications as read.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     }
   };
 

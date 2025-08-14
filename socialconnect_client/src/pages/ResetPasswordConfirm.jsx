@@ -1,7 +1,7 @@
-// src/pages/ResetPasswordConfirm.jsx
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { resetPasswordConfirm } from '../services/api';
+import { toast } from 'react-toastify';
 
 function ResetPasswordConfirm() {
   const { uidb64, token } = useParams();
@@ -22,14 +22,15 @@ function ResetPasswordConfirm() {
     try {
       await resetPasswordConfirm({ uid: uidb64, token, password });
       setMessage('Password reset successful. Redirecting to sign in...');
-      setTimeout(() => navigate('/login'), 2000);
+      setTimeout(() => navigate('/login'), 3000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid or expired token.');
+      const errorMsg = err.response?.data?.error || 'Invalid or expired token.';
+      setError(errorMsg);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">Set new password</h2>
@@ -109,4 +110,3 @@ function ResetPasswordConfirm() {
 }
 
 export default ResetPasswordConfirm;
-

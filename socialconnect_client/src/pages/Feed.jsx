@@ -1,5 +1,3 @@
-
-// src/pages/Feed.jsx
 import { useState, useEffect } from 'react';
 import { getFeed } from '../services/api';
 import PostCard from '../components/PostCard';
@@ -23,7 +21,6 @@ function Feed() {
         setTotalPages(Math.ceil(count / 20));
       } catch (err) {
         setError(err.response?.data?.detail || 'Failed to load feed.');
-        setPosts([]);
       } finally {
         setLoading(false);
       }

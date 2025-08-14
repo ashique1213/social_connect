@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
@@ -12,10 +11,13 @@ import AdminDashboard from './pages/AdminDashboard';
 import ResetPassword from './pages/ResetPassword';
 import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import ChangePassword from './pages/ChangePassword';
+import { ToastContainer } from 'react-toastify';
+
 
 function App() {
   return (
     <AuthProvider>
+       <ToastContainer />
       <Router>
         <div className="min-h-screen bg-gray-100">
           <Navbar />

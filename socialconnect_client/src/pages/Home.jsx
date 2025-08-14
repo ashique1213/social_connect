@@ -1,5 +1,3 @@
-
-// src/pages/Home.jsx
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -8,7 +6,7 @@ function Home() {
   const { user } = useContext(AuthContext);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-12">
           <h1 className="text-6xl font-bold text-gray-900 mb-6">
@@ -80,37 +78,6 @@ function Home() {
           </div>
         )}
         
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center p-6">
-            <div className="w-12 h-12 bg-gray-900 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Connect</h3>
-            <p className="text-gray-600 text-sm">Find and follow friends to stay updated with their latest posts.</p>
-          </div>
-          
-          <div className="text-center p-6">
-            <div className="w-12 h-12 bg-gray-900 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Share</h3>
-            <p className="text-gray-600 text-sm">Post updates, photos, and thoughts to keep your network engaged.</p>
-          </div>
-          
-          <div className="text-center p-6">
-            <div className="w-12 h-12 bg-gray-900 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Discover</h3>
-            <p className="text-gray-600 text-sm">Explore trending topics and discover new content from your community.</p>
-          </div>
-        </div>
       </div>
     </div>
   );

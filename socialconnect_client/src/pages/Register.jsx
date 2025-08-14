@@ -23,16 +23,14 @@ function Register() {
     try {
       await register(formData);
       setSuccess('Registration successful! Please check your email to verify your account.');
-      // Optionally auto-login after registration (if is_active is not enforced)
-      // await login({ email: formData.email, password: formData.password });
-      // navigate('/feed');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      const errorMsg = err.response?.data?.detail || 'Registration failed. Please try again.';
+      setError(errorMsg);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>

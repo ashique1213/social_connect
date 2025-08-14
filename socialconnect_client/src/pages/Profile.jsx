@@ -1,9 +1,9 @@
-// src/pages/Profile.jsx
 import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getUser, updateProfile, followUser, unfollowUser, getFollowers, getFollowing, createPost, getPosts } from '../services/api';
 import PostCard from '../components/PostCard';
+import { toast } from 'react-toastify';
 
 function Profile() {
   const { userId } = useParams();
@@ -30,7 +30,7 @@ function Profile() {
         const id = userId || 'me';
         const [userResponse, postsResponse] = await Promise.all([
           getUser(id),
-          getPosts(1, id), // Modified to fetch user's posts
+          getPosts(1, id),
         ]);
         setProfile(userResponse.data);
         setFormData({
@@ -55,8 +55,26 @@ function Profile() {
     try {
       await followUser(userId);
       setFollowers([...followers, user]);
+      toast.success(`Followed ${profile.username}!`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     } catch (err) {
       setError('Follow failed.');
+      toast.error('Failed to follow user.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     }
   };
 
@@ -64,6 +82,15 @@ function Profile() {
     try {
       await unfollowUser(userId);
       setFollowers(followers.filter((f) => f.id !== user.id));
+      toast.success(`Unfollowed ${profile.username}.`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     } catch (err) {
       setError('Unfollow failed.');
     }

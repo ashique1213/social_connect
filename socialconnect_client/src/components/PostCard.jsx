@@ -1,8 +1,8 @@
-// src/components/PostCard.jsx
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { likePost, unlikePost, getLikeStatus, addComment, getComments, deletePost, updatePost, followUser, unfollowUser, getFollowing } from '../services/api';
+import { likePost, unlikePost, addComment, getComments, deletePost, updatePost, followUser, unfollowUser, getFollowing } from '../services/api';
+import { showToast } from '../utils/toast';
 
 function PostCard({ post, onDelete }) {
   const { user } = useContext(AuthContext);
@@ -17,6 +17,7 @@ function PostCard({ post, onDelete }) {
     category: post.category,
     image: null,
   });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     const checkFollowing = async () => {
@@ -27,6 +28,7 @@ function PostCard({ post, onDelete }) {
           setIsFollowing(followingIds.includes(post.author.id));
         } catch (error) {
           console.error('Failed to check following status:', error);
+          showToast.error('Failed to check following status.');
         }
       }
     };
@@ -39,13 +41,16 @@ function PostCard({ post, onDelete }) {
         await unlikePost(post.id);
         setLikeCount(likeCount - 1);
         setLiked(false);
+        showToast.success('Post unliked.');
       } else {
         await likePost(post.id);
         setLikeCount(likeCount + 1);
         setLiked(true);
+        showToast.success('Post liked!');
       }
     } catch (error) {
       console.error('Like action failed:', error);
+      showToast.error('Failed to like/unlike post.');
     }
   };
 
@@ -56,8 +61,10 @@ function PostCard({ post, onDelete }) {
       setCommentContent('');
       const response = await getComments(post.id);
       setComments(response.data);
+      showToast.success('Comment added!');
     } catch (error) {
       console.error('Comment failed:', error);
+      showToast.error('Failed to add comment.');
     }
   };
 
@@ -65,8 +72,11 @@ function PostCard({ post, onDelete }) {
     try {
       await deletePost(post.id);
       onDelete(post.id);
+      setIsDeleteModalOpen(false);
+      showToast.success('Post deleted successfully.');
     } catch (error) {
       console.error('Delete post failed:', error);
+      showToast.error('Failed to delete post.');
     }
   };
 
@@ -74,8 +84,10 @@ function PostCard({ post, onDelete }) {
     try {
       await followUser(post.author.id);
       setIsFollowing(true);
+      showToast.success(`Followed ${post.author.username}!`);
     } catch (error) {
       console.error('Follow failed:', error);
+      showToast.error('Failed to follow user.');
     }
   };
 
@@ -83,33 +95,43 @@ function PostCard({ post, onDelete }) {
     try {
       await unfollowUser(post.author.id);
       setIsFollowing(false);
+      showToast.success(`Unfollowed ${post.author.username}.`);
     } catch (error) {
       console.error('Unfollow failed:', error);
+      showToast.error('Failed to unfollow user.');
     }
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
+    
+    // Validation
     if (!editData.content.trim()) {
       console.error('Content cannot be empty.');
+      showToast.error('Content cannot be empty.');
       return;
     }
     if (editData.content.length > 280) {
       console.error('Content cannot exceed 280 characters.');
+      showToast.error('Content cannot exceed 280 characters.');
       return;
     }
     if (!['general', 'announcement', 'question'].includes(editData.category)) {
       console.error('Invalid category.');
+      showToast.error('Invalid category selected.');
       return;
     }
     if (editData.image && editData.image.size > 2 * 1024 * 1024) {
       console.error('Image size exceeds 2MB.');
+      showToast.error('Image size exceeds 2MB.');
       return;
     }
     if (editData.image && !['image/jpeg', 'image/png'].includes(editData.image.type)) {
       console.error('Image must be JPEG or PNG.');
+      showToast.error('Image must be JPEG or PNG.');
       return;
     }
+    
     try {
       const updatePayload = {
         content: editData.content.trim(),
@@ -121,8 +143,10 @@ function PostCard({ post, onDelete }) {
       await updatePost(post.id, updatePayload);
       setIsEditing(false);
       onDelete(post.id); // Trigger reload in parent
+      showToast.success('Post updated successfully!');
     } catch (error) {
       console.error('Edit post failed:', error.response?.data || error.message);
+      showToast.error('Failed to update post.');
     }
   };
 
@@ -132,11 +156,12 @@ function PostCard({ post, onDelete }) {
       setComments(response.data);
     } catch (error) {
       console.error('Fetch comments failed:', error);
+      showToast.error('Failed to load comments.');
     }
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 mb-3">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200 mb-6">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-100">
         <div className="flex items-center space-x-3">
@@ -274,7 +299,7 @@ function PostCard({ post, onDelete }) {
               </button>
               
               <button 
-                onClick={handleDelete} 
+                onClick={() => setIsDeleteModalOpen(true)} 
                 className="flex items-center space-x-1 text-xs font-medium text-red-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -337,6 +362,42 @@ function PostCard({ post, onDelete }) {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Delete Post</h3>
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 rounded-md"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4">
+              <p className="text-sm text-gray-600">Are you sure you want to delete this post? This action cannot be undone.</p>
+            </div>
+            <div className="flex justify-end space-x-3 p-4 border-t border-gray-200">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium text-sm hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium text-sm hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

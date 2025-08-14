@@ -1,5 +1,3 @@
-
-// src/components/Notification.jsx
 function Notification({ notification }) {
   return (
     <div className={`p-4 rounded-lg border mb-3 transition-all duration-200 ${

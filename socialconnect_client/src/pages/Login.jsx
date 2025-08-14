@@ -1,8 +1,7 @@
-// src/pages/Login.jsx
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { login } from '../services/api';
+import { toast } from 'react-toastify';
 
 function Login() {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -11,7 +10,6 @@ function Login() {
   const { loginUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  
 
   // Check for verification success message from query params
   const query = new URLSearchParams(location.search);
@@ -20,6 +18,15 @@ function Login() {
   useEffect(() => {
     if (verified === 'true') {
       setSuccess('Email verified successfully! Please log in.');
+      toast.success('Email verified successfully! Please log in.', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
     }
   }, [verified]);
 
@@ -29,14 +36,24 @@ function Login() {
     setSuccess('');
     try {
       await loginUser(formData);
+      toast.success('Logged in successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: 'light',
+      });
       navigate('/feed'); // Redirect to home/feed after login
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+      const errorMsg = err.response?.data?.detail || 'Login failed. Please check your credentials.';
+      setError(errorMsg);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">Sign in to your account</h2>

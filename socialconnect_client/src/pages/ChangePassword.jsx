@@ -1,4 +1,3 @@
-// src/pages/ChangePassword.jsx
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -34,12 +33,13 @@ function ChangePassword() {
       setConfirmPassword('');
       setTimeout(() => navigate('/profile/me'), 2000);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to change password.');
+      const errorMsg = err.response?.data?.error || 'Failed to change password.';
+      setError(errorMsg);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="h-12 w-12 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -1,7 +1,9 @@
+
 // src/pages/ResetPassword.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { resetPassword } from '../services/api';
+import { toast } from 'react-toastify';
 
 function ResetPassword() {
   const [email, setEmail] = useState('');
@@ -18,12 +20,13 @@ function ResetPassword() {
       setMessage('If the email exists, a password reset link has been sent.');
       setEmail('');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to send reset email.');
+      const errorMsg = err.response?.data?.detail || 'Failed to send reset email.';
+      setError(errorMsg);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-[80vh] bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">Reset your password</h2>
@@ -86,4 +89,3 @@ function ResetPassword() {
 }
 
 export default ResetPassword;
-

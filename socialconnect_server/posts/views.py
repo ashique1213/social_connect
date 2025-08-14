@@ -88,5 +88,23 @@ class PostViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class FeedView(APIView):
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
 
+    def get(self, request):
+        user = request.user
+        # Filter posts based on author privacy
+        following_ids = Follow.objects.filter(follower=user).values_list('following_id', flat=True)
+        posts = Post.objects.filter(
+            Q(is_active=True) &
+            (Q(author=user) |  # Own posts
+             Q(author__privacy='public') |  # Public profiles
+             Q(author__privacy='followers_only', author__in=following_ids))  # Followers-only for followed users
+        ).order_by('-created_at')
+        paginator = self.pagination_class()
+        paginator.page_size = 20
+        page = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(page, many=True, context={'request': request})
+        return paginator.get_paginated_response(serializer.data)
 

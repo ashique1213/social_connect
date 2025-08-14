@@ -12,6 +12,7 @@ import ResetPassword from './pages/ResetPassword';
 import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import ChangePassword from './pages/ChangePassword';
 import { ToastContainer } from 'react-toastify';
+import PublicRoute from './services/PublicRoute';
 
 
 function App() {
@@ -24,8 +25,10 @@ function App() {
           <div className="container mx-auto p-4">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+
+              <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+              <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+              
               <Route path="/profile/:userId?" element={<Profile />} />
               <Route path="/feed" element={<Feed />} />
               <Route path="/notifications" element={<Notifications />} />

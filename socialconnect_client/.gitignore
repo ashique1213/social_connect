@@ -23,9 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-App.jsx
-supabase.js
-
-Notifications.jsx
-Notification.jsx
 AdminDashboard.jsx

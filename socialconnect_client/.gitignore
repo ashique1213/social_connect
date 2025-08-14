@@ -26,4 +26,4 @@ dist-ssr
 App.jsx
 components
 pages
-services
+supabase.js

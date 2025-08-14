@@ -114,3 +114,37 @@ class ChangePasswordView(APIView):
         request.user.save()
         return Response({'message': 'Password changed.'})
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'followers', 'following']:
+            return [IsAuthenticatedOrReadOnly()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return User.objects.all()
+        return User.objects.filter(is_active=True)
+
+    def get_object(self):
+        pk = self.kwargs['pk']
+        if pk == 'me':
+            return self.request.user
+        return super().get_object()
+
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user.privacy == 'private' and user != request.user:
+            return Response({'detail': 'Private profile.'}, status=status.HTTP_403_FORBIDDEN)
+        if user.privacy == 'followers_only' and not Follow.objects.filter(follower=request.user, following=user).exists() and user != request.user:
+            return Response({'detail': 'Followers only.'}, status=status.HTTP_403_FORBIDDEN)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        if self.get_object() != self.request.user and not self.request.user.is_staff:
+            raise permissions.PermissionDenied('Cannot edit this profile.')
+        serializer.save()
+

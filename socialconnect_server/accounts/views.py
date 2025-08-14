@@ -53,27 +53,6 @@ class LoginView(TokenObtainPairView):
 
     serializer_class = CustomTokenObtainPairSerializer
 
-
-class VerifyEmailView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-
-        if user is not None and default_token_generator.check_token(user, token):
-            if not user.is_active:
-                user.is_active = True
-                user.save()
-                # Redirect to frontend login page with success message
-                frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')
-                return HttpResponseRedirect(f"{frontend_url}/login?verified=true")
-            return Response({'detail': 'Email already verified.'}, status=status.HTTP_200_OK)
-        return Response({'detail': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
-    
 class PasswordResetView(APIView):
     permission_classes = [AllowAny]
 
@@ -113,6 +92,26 @@ class ChangePasswordView(APIView):
         request.user.set_password(new_password)
         request.user.save()
         return Response({'message': 'Password changed.'})
+
+class VerifyEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            if not user.is_active:
+                user.is_active = True
+                user.save()
+                # Redirect to frontend login page with success message
+                frontend_url = getattr(settings, 'FRONTEND_URL', 'http://localhost:5173')
+                return HttpResponseRedirect(f"{frontend_url}/login?verified=true")
+            return Response({'detail': 'Email already verified.'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

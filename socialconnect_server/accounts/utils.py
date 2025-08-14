@@ -1,4 +1,3 @@
-# accounts/utils.py
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -11,11 +10,11 @@ def send_verification_email(user, request=None):
     
     # Determine the domain dynamically
     if request:
-        domain = request.build_absolute_uri('/')[:-1]  # e.g., http://localhost:8000
+        domain = request.build_absolute_uri('/')[:-1] 
     else:
         domain = getattr(settings, 'BASE_URL', 'http://localhost:8000')
     
-    verification_url = f"{domain}/api/verify/{uid}/{token}/"  # Correct endpoint
+    verification_url = f"{domain}/api/verify/{uid}/{token}/"  
     
     send_mail(
         subject='Verify Your Email',

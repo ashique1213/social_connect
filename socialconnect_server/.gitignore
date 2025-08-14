@@ -40,9 +40,7 @@ env/
 .vscode/
 .idea/
 
-serializers.py
-views.py
-utils.py
+
 
 
 admin_panel

@@ -1,4 +1,3 @@
-# admin_panel/views.py
 from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView

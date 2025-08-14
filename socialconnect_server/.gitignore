@@ -40,8 +40,11 @@ env/
 .vscode/
 .idea/
 
+serializers.py
+views.py
+utils.py
 
-accounts
+
 admin_panel
 interactions
 notifications

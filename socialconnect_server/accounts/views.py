@@ -74,3 +74,43 @@ class VerifyEmailView(APIView):
             return Response({'detail': 'Email already verified.'}, status=status.HTTP_200_OK)
         return Response({'detail': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
     
+class PasswordResetView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
+            send_password_reset_email(user, request)
+        return Response({'message': 'If email exists, reset instructions sent.'}, status=status.HTTP_200_OK)
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        uidb64 = request.data.get('uid')
+        token = request.data.get('token')
+        password = request.data.get('password')
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+            if default_token_generator.check_token(user, token):
+                user.set_password(password)
+                user.save()
+                return Response({'message': 'Password reset successful.'})
+        except:
+            pass
+        return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        if not request.user.check_password(old_password):
+            return Response({'error': 'Invalid old password.'}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.set_password(new_password)
+        request.user.save()
+        return Response({'message': 'Password changed.'})
+

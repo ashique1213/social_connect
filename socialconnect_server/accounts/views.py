@@ -148,3 +148,35 @@ class UserViewSet(viewsets.ModelViewSet):
             raise permissions.PermissionDenied('Cannot edit this profile.')
         serializer.save()
 
+    @action(detail=True, methods=['post'])
+    def follow(self, request, pk=None):
+        target_user = self.get_object()
+        if target_user == request.user:
+            return Response({'detail': 'Cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+        _, created = Follow.objects.get_or_create(follower=request.user, following=target_user)
+        if not created:
+            return Response({'detail': 'Already following.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'Followed.'})
+
+    @action(detail=True, methods=['delete'])
+    def unfollow(self, request, pk=None):
+        target_user = self.get_object()
+        follow = Follow.objects.filter(follower=request.user, following=target_user).first()
+        if not follow:
+            return Response({'detail': 'Not following.'}, status=status.HTTP_400_BAD_REQUEST)
+        follow.delete()
+        return Response({'detail': 'Unfollowed.'})
+
+    @action(detail=True, methods=['get'])
+    def followers(self, request, pk=None):
+        user = self.get_object()
+        followers = [f.follower for f in user.followers_set.all()]
+        serializer = UserSerializer(followers, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def following(self, request, pk=None):
+        user = self.get_object()
+        following = [f.following for f in user.following_set.all()]
+        serializer = UserSerializer(following, many=True)
+        return Response(serializer.data)

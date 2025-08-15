@@ -4,7 +4,7 @@ SocialConnect is a full-stack social media platform built with a **Django REST F
 
 ## For Testing
 
-When deployed for testing, the setup includes:
+For deployed One:
 
 - **Admin User**  
   - Username: `Admin`  

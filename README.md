@@ -7,13 +7,12 @@ SocialConnect is a full-stack social media platform built with a **Django REST F
 For deployed One:
 
 - **Admin User**  
-  - Username: `Admin`  
-  - Password: `Admin@123`  
-  - Roles: Staff & Superuser
+  - User: `Admin`  
+  - Pass: `Admin@123`  
 
 - **Test User**  
-  - Username: `napos`  
-  - Password: `Admin@123`  
+  - User: `napos`  
+  - Pass: `Admin@123`  
 
 ## Features
 

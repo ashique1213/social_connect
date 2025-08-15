@@ -18,6 +18,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         try:
             post_id = instance.post.id
             comment_id = instance.id
+            user_username = instance.user.username
             instance.post.comment_count -= 1
             instance.post.save()
             instance.delete()

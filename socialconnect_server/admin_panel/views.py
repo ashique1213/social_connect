@@ -92,7 +92,7 @@ class AdminPostViewSet(viewsets.ModelViewSet):
         try:
             response = super().retrieve(request, *args, **kwargs)
             post = self.get_object()
-            logger.info(f"Admin {request.user.username} (ID: {request.user.id}) retrieved post ID: {post.id} by user {post.author.username}")
+            logger.info(f"Admin {request.user.username} (ID: {request.user.id}) retrieved post ID: {post.id} by user {post.user.username}")
             return response
         except Exception as e:
             logger.error(f"Admin {request.user.username} (ID: {request.user.id}) failed to retrieve post ID {self.kwargs.get('pk')}: {str(e)}")
@@ -102,14 +102,13 @@ class AdminPostViewSet(viewsets.ModelViewSet):
         try:
             post = self.get_object()
             post_id = post.id
-            user_username = post.author.username
+            # user_username = post.user.username
             response = super().destroy(request, *args, **kwargs)
             logger.info(f"Admin {request.user.username} (ID: {request.user.id}) deleted post ID: {post_id} by user {user_username}")
             return response
         except Exception as e:
             logger.error(f"Admin {request.user.username} (ID: {request.user.id}) failed to delete post ID {self.kwargs.get('pk')}: {str(e)}")
             raise
-
 
 class AdminStatsView(APIView):
     permission_classes = [IsAdminUser]

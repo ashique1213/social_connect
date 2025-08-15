@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 function Navbar() {
   const { user, logoutUser, notifications } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [showInfoMessage, setShowInfoMessage] = useState(true);
 
   const handleLogout = async () => {
     await logoutUser();
@@ -17,6 +18,28 @@ function Navbar() {
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
+        
+        {showInfoMessage && (
+          <div className="bg-blue-50 border-b border-blue-200 p-3 flex items-center justify-between">
+            <div className="flex items-center">
+              <svg className="h-5 w-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-sm text-blue-800">
+                Our backend is hosted on Render, so some features may load slowly. Thank you for your patience!
+              </p>
+            </div>
+            <button
+              onClick={() => setShowInfoMessage(false)}
+              className="text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         <div className="flex justify-between items-center h-16">
           <Link 
             to="/" 
@@ -96,4 +119,3 @@ function Navbar() {
 }
 
 export default Navbar;
-

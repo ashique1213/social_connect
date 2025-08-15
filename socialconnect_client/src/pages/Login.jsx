@@ -18,15 +18,6 @@ function Login() {
   useEffect(() => {
     if (verified === 'true') {
       setSuccess('Email verified successfully! Please log in.');
-      toast.success('Email verified successfully! Please log in.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: 'light',
-      });
     }
   }, [verified]);
 

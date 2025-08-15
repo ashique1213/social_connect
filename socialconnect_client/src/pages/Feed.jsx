@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getFeed } from '../services/api';
-import PostCard from '../components/PostCard';
+import PostCard from '../components/post/PostCard';
 
 function Feed() {
   const [posts, setPosts] = useState([]);

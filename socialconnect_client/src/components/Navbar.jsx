@@ -20,18 +20,20 @@ function Navbar() {
       <div className="container mx-auto px-4">
         
         {showInfoMessage && (
-          <div className="bg-blue-50 border-b border-blue-200 p-3 flex items-center justify-between">
+          <div className="bg-red-50 border-b border-red-200 p-3 flex items-center justify-between">
             <div className="flex items-center">
-              <svg className="h-5 w-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-sm text-blue-800">
-                Our backend is hosted on Render, so some features may load slowly. Thank you for your patience!
+              <p className="text-sm text-red-600 font-bold">
+                  Our backend is hosted on Render, so some features may load slowly. Thank you for your patience!  
+                  ______  Also, I’ve added some test users — check the README.md for details.
               </p>
+
             </div>
             <button
               onClick={() => setShowInfoMessage(false)}
-              className="text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
+              className="text-red-600 hover:red-blue-800 focus:outline-none focus:ring-2 focus:red-blue-500 focus:ring-offset-2 rounded-md"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

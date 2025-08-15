@@ -71,7 +71,7 @@ function Login() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                Username or Email
+                Username
               </label>
               <input
                 id="username"

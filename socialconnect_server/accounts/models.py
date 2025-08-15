@@ -14,4 +14,4 @@ class User(AbstractUser):
         default='public'
     )
     last_login = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=False)  # For email verification
+    is_active = models.BooleanField(default=False)
